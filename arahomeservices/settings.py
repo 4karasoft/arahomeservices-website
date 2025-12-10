@@ -145,3 +145,13 @@ ADMIN_EMAIL = os.getenv('ADMIN_EMAIL', '')
 # Telegram Configuration
 TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN', '')
 TELEGRAM_CHAT_ID = os.getenv('TELEGRAM_CHAT_ID', '')
+
+# CSRF Trusted Origins
+CSRF_TRUSTED_ORIGINS = [
+    'https://arahomeservice.com',
+    'https://www.arahomeservice.com',
+    'https://arahomeservices-app-kdqx7.ondigitalocean.app'
+]
+
+# Secure Proxy SSL Header
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
