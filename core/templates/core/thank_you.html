@@ -1,0 +1,32 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Thank You - ARA Home Services{% endblock %}
+
+{% block content %}
+<section class="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-600 to-blue-800 py-20">
+    <div class="container mx-auto px-4 text-center">
+        <div class="bg-white rounded-xl shadow-2xl p-12 max-w-2xl mx-auto">
+            <div class="text-6xl mb-6">✅</div>
+            <h1 class="text-4xl font-bold text-gray-800 mb-4">Thank You!</h1>
+            <p class="text-xl text-gray-600 mb-6">
+                Your service request has been received successfully.
+            </p>
+            <p class="text-lg text-gray-600 mb-8">
+                We'll contact you shortly to schedule your appointment. Our team typically responds within 1-2 hours during business hours.
+            </p>
+            <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-8 text-left">
+                <p class="text-gray-700">
+                    <strong>What's next?</strong><br>
+                    • Check your phone for our call or text<br>
+                    • Have your appliance details ready<br>
+                    • We'll confirm your $49 service fee when we schedule
+                </p>
+            </div>
+            <a href="{% url 'core:home' %}" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg text-lg transition-colors">
+                Return Home
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}
+

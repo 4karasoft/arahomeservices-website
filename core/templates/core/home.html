@@ -1,0 +1,141 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-20">
+    <div class="container mx-auto px-4 text-center">
+        <h1 class="text-5xl font-bold mb-4">Expert Appliance Repair in Houston</h1>
+        <p class="text-xl mb-6">Fast, reliable service you can trust</p>
+        <div class="inline-block bg-yellow-400 text-blue-900 px-6 py-3 rounded-lg font-bold text-lg">
+            $49 Service Fee
+        </div>
+    </div>
+</section>
+
+<!-- Services Section -->
+<section class="py-16 bg-white">
+    <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center mb-12 text-gray-800">Our Services</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div class="text-center p-6 bg-gray-50 rounded-lg hover:shadow-lg transition-shadow">
+                <div class="text-5xl mb-4">🧊</div>
+                <h3 class="text-xl font-semibold mb-2">Refrigerator</h3>
+                <p class="text-gray-600">Cooling issues, ice maker problems, and more</p>
+            </div>
+            <div class="text-center p-6 bg-gray-50 rounded-lg hover:shadow-lg transition-shadow">
+                <div class="text-5xl mb-4">🍽️</div>
+                <h3 class="text-xl font-semibold mb-2">Dishwasher</h3>
+                <p class="text-gray-600">Not draining, cleaning issues, leaks</p>
+            </div>
+            <div class="text-center p-6 bg-gray-50 rounded-lg hover:shadow-lg transition-shadow">
+                <div class="text-5xl mb-4">👕</div>
+                <h3 class="text-xl font-semibold mb-2">Washer & Dryer</h3>
+                <p class="text-gray-600">Spin cycles, heating, drainage problems</p>
+            </div>
+            <div class="text-center p-6 bg-gray-50 rounded-lg hover:shadow-lg transition-shadow">
+                <div class="text-5xl mb-4">🔥</div>
+                <h3 class="text-xl font-semibold mb-2">Oven & Stove</h3>
+                <p class="text-gray-600">Heating elements, igniters, temperature control</p>
+            </div>
+            <div class="text-center p-6 bg-gray-50 rounded-lg hover:shadow-lg transition-shadow">
+                <div class="text-5xl mb-4">📱</div>
+                <h3 class="text-xl font-semibold mb-2">Microwave</h3>
+                <p class="text-gray-600">Not heating, door issues, display problems</p>
+            </div>
+            <div class="text-center p-6 bg-gray-50 rounded-lg hover:shadow-lg transition-shadow">
+                <div class="text-5xl mb-4">❄️</div>
+                <h3 class="text-xl font-semibold mb-2">Air Conditioner</h3>
+                <p class="text-gray-600">Cooling issues, airflow problems</p>
+            </div>
+            <div class="text-center p-6 bg-gray-50 rounded-lg hover:shadow-lg transition-shadow">
+                <div class="text-5xl mb-4">🔧</div>
+                <h3 class="text-xl font-semibold mb-2">All Brands</h3>
+                <p class="text-gray-600">We service all major appliance brands</p>
+            </div>
+            <div class="text-center p-6 bg-gray-50 rounded-lg hover:shadow-lg transition-shadow">
+                <div class="text-5xl mb-4">⚡</div>
+                <h3 class="text-xl font-semibold mb-2">Same Day Service</h3>
+                <p class="text-gray-600">Fast response time for urgent repairs</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Booking Form Section -->
+<section class="py-16 bg-gray-50">
+    <div class="container mx-auto px-4 max-w-2xl">
+        <div class="bg-white rounded-xl shadow-lg p-8">
+            <h2 class="text-3xl font-bold text-center mb-8 text-gray-800">Request Service</h2>
+            
+            {% if form.errors %}
+            <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+                <p class="text-red-800 font-semibold mb-2">Please correct the following errors:</p>
+                <ul class="list-disc list-inside text-red-700">
+                    {% for field, errors in form.errors.items %}
+                        {% for error in errors %}
+                            <li>{{ field|title }}: {{ error }}</li>
+                        {% endfor %}
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+            
+            <form method="post" class="space-y-6">
+                {% csrf_token %}
+                
+                <div>
+                    <label for="{{ form.name.id_for_label }}" class="block text-gray-700 font-semibold mb-2">
+                        Name <span class="text-red-500">*</span>
+                    </label>
+                    {{ form.name }}
+                </div>
+                
+                <div>
+                    <label for="{{ form.phone.id_for_label }}" class="block text-gray-700 font-semibold mb-2">
+                        Phone Number <span class="text-red-500">*</span>
+                    </label>
+                    {{ form.phone }}
+                </div>
+                
+                <div>
+                    <label for="{{ form.address.id_for_label }}" class="block text-gray-700 font-semibold mb-2">
+                        Service Address <span class="text-red-500">*</span>
+                    </label>
+                    {{ form.address }}
+                </div>
+                
+                <div>
+                    <label for="{{ form.appliance_type.id_for_label }}" class="block text-gray-700 font-semibold mb-2">
+                        Appliance Type <span class="text-red-500">*</span>
+                    </label>
+                    {{ form.appliance_type }}
+                </div>
+                
+                <div>
+                    <label for="{{ form.issue_description.id_for_label }}" class="block text-gray-700 font-semibold mb-2">
+                        Issue Description <span class="text-red-500">*</span>
+                    </label>
+                    {{ form.issue_description }}
+                </div>
+                
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-6 rounded-lg text-lg transition-colors">
+                    Submit Request
+                </button>
+            </form>
+            
+            <p class="mt-6 text-center text-gray-600 text-sm">
+                By submitting this form, you agree to be contacted by ARA Home Services regarding your service request.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="bg-gray-800 text-white py-8">
+    <div class="container mx-auto px-4 text-center">
+        <p class="mb-2">&copy; 2024 ARA Home Services. All rights reserved.</p>
+        <p class="text-gray-400">Operating under 4KARA LLC</p>
+    </div>
+</footer>
+{% endblock %}
+
