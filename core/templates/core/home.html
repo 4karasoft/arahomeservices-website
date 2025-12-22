@@ -1,21 +1,67 @@
 {% extends 'core/base.html' %}
+{% load static %}
 
 {% block content %}
 <!-- Hero Section -->
-<section class="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-20">
+<section class="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-24">
     <div class="container mx-auto px-4 text-center">
-        <h1 class="text-5xl font-bold mb-4">Expert Appliance Repair in Houston</h1>
-        <p class="text-xl mb-6">Fast, reliable service you can trust</p>
-        <div class="inline-block bg-yellow-400 text-blue-900 px-6 py-3 rounded-lg font-bold text-lg">
-            $49 Service Fee
+        <h1 class="text-5xl md:text-6xl font-bold mb-6">Expert Appliance Repair in Houston</h1>
+        <p class="text-xl md:text-2xl mb-8 text-blue-100">Fast, reliable service you can trust</p>
+        <div class="flex flex-col md:flex-row items-center justify-center gap-4 mb-8">
+            <div class="bg-yellow-400 text-blue-900 px-8 py-4 rounded-lg font-bold text-xl shadow-lg">
+                $49 Service Fee
+            </div>
+            <div class="text-lg">
+                <span class="font-semibold">Same-Day Service Available</span>
+            </div>
+        </div>
+        <a href="#request-service" class="inline-block bg-white text-blue-600 hover:bg-blue-50 font-bold py-4 px-10 rounded-lg text-xl shadow-xl transition-all transform hover:scale-105">
+            Schedule Your Repair Now →
+        </a>
+    </div>
+</section>
+
+<!-- Trust Badges Section -->
+<section class="py-8 bg-white border-b">
+    <div class="container mx-auto px-4">
+        <div class="flex flex-wrap items-center justify-center gap-8 md:gap-12">
+            <div class="flex items-center space-x-2">
+                <span class="text-3xl">⭐</span>
+                <div>
+                    <div class="font-bold text-gray-800">4.9/5 Rating</div>
+                    <div class="text-sm text-gray-600">500+ Reviews</div>
+                </div>
+            </div>
+            <div class="flex items-center space-x-2">
+                <span class="text-3xl">✓</span>
+                <div>
+                    <div class="font-bold text-gray-800">Licensed & Insured</div>
+                    <div class="text-sm text-gray-600">Fully Certified</div>
+                </div>
+            </div>
+            <div class="flex items-center space-x-2">
+                <span class="text-3xl">🏆</span>
+                <div>
+                    <div class="font-bold text-gray-800">10+ Years Experience</div>
+                    <div class="text-sm text-gray-600">Trusted Professionals</div>
+                </div>
+            </div>
+            <div class="flex items-center space-x-2">
+                <span class="text-3xl">🔒</span>
+                <div>
+                    <div class="font-bold text-gray-800">100% Satisfaction</div>
+                    <div class="text-sm text-gray-600">Money-Back Guarantee</div>
+                </div>
+            </div>
         </div>
     </div>
 </section>
 
 <!-- Services Section -->
-<section class="py-16 bg-white">
+<section id="services" class="py-16 bg-white">
     <div class="container mx-auto px-4">
-        <h2 class="text-3xl font-bold text-center mb-12 text-gray-800">Our Services</h2>
+        <h2 class="text-4xl font-bold text-center mb-4 text-gray-800">Our Services</h2>
+        <p class="text-center text-gray-600 mb-12 text-lg">Expert repair for all your home appliances</p>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             <div class="text-center p-6 bg-gray-50 rounded-lg hover:shadow-lg transition-shadow">
                 <div class="text-5xl mb-4">🧊</div>
@@ -61,11 +107,58 @@
     </div>
 </section>
 
+<!-- Testimonials Section -->
+<section id="testimonials" class="py-16 bg-gray-50">
+    <div class="container mx-auto px-4">
+        <h2 class="text-4xl font-bold text-center mb-4 text-gray-800">What Our Customers Say</h2>
+        <p class="text-center text-gray-600 mb-12 text-lg">Trusted by hundreds of satisfied homeowners</p>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <div class="flex items-center mb-4">
+                    <div class="flex text-yellow-400 text-xl">
+                        ★★★★★
+                    </div>
+                </div>
+                <p class="text-gray-700 mb-4 italic">"ARA Home Services fixed my refrigerator in no time! The technician was professional, knowledgeable, and very courteous. Highly recommend!"</p>
+                <div class="border-t pt-4">
+                    <p class="font-semibold text-gray-800">Sarah Johnson</p>
+                    <p class="text-sm text-gray-600">Houston, TX</p>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <div class="flex items-center mb-4">
+                    <div class="flex text-yellow-400 text-xl">
+                        ★★★★★
+                    </div>
+                </div>
+                <p class="text-gray-700 mb-4 italic">"Same-day service when my dishwasher broke down. Fair pricing and excellent work. My appliances are running like new again!"</p>
+                <div class="border-t pt-4">
+                    <p class="font-semibold text-gray-800">Michael Chen</p>
+                    <p class="text-sm text-gray-600">Houston, TX</p>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <div class="flex items-center mb-4">
+                    <div class="flex text-yellow-400 text-xl">
+                        ★★★★★
+                    </div>
+                </div>
+                <p class="text-gray-700 mb-4 italic">"Outstanding service! They repaired my washer and dryer, and even cleaned up after themselves. Very impressed with the quality and professionalism."</p>
+                <div class="border-t pt-4">
+                    <p class="font-semibold text-gray-800">Emily Rodriguez</p>
+                    <p class="text-sm text-gray-600">Houston, TX</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 <!-- Booking Form Section -->
-<section class="py-16 bg-gray-50">
+<section id="request-service" class="py-16 bg-white">
     <div class="container mx-auto px-4 max-w-2xl">
-        <div class="bg-white rounded-xl shadow-lg p-8">
-            <h2 class="text-3xl font-bold text-center mb-8 text-gray-800">Request Service</h2>
+        <div class="bg-gradient-to-br from-blue-50 to-white rounded-xl shadow-2xl p-8 md:p-10 border-2 border-blue-100">
+            <h2 class="text-4xl font-bold text-center mb-4 text-gray-800">Request Service Today</h2>
+            <p class="text-center text-gray-600 mb-8 text-lg">Fill out the form below and we'll contact you within 1-2 hours</p>
             
             {% if form.errors %}
             <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
@@ -118,23 +211,74 @@
                     {{ form.issue_description }}
                 </div>
                 
-                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-6 rounded-lg text-lg transition-colors">
-                    Submit Request
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-6 rounded-lg text-lg transition-all transform hover:scale-105 shadow-lg">
+                    Get Your Free Quote Now →
                 </button>
             </form>
             
-            <p class="mt-6 text-center text-gray-600 text-sm">
-                By submitting this form, you agree to be contacted by ARA Home Services regarding your service request.
-            </p>
+            <div class="mt-6 space-y-3">
+                <p class="text-center text-gray-600 text-sm">
+                    By submitting this form, you agree to be contacted by ARA Home Services regarding your service request.
+                </p>
+                <div class="flex items-center justify-center space-x-6 text-sm text-gray-600">
+                    <div class="flex items-center space-x-1">
+                        <span>✓</span>
+                        <span>No Hidden Fees</span>
+                    </div>
+                    <div class="flex items-center space-x-1">
+                        <span>✓</span>
+                        <span>Free Estimates</span>
+                    </div>
+                    <div class="flex items-center space-x-1">
+                        <span>✓</span>
+                        <span>Same-Day Service</span>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </section>
 
-<!-- Footer -->
-<footer class="bg-gray-800 text-white py-8">
+<!-- Call to Action Banner -->
+<section class="py-12 bg-gradient-to-r from-blue-600 to-blue-800 text-white">
     <div class="container mx-auto px-4 text-center">
-        <p class="mb-2">&copy; 2024 ARA Home Services. All rights reserved.</p>
-        <p class="text-gray-400">Operating under 4KARA LLC</p>
+        <h2 class="text-3xl font-bold mb-4">Ready to Fix Your Appliances?</h2>
+        <p class="text-xl mb-6 text-blue-100">Don't wait - schedule your service appointment today!</p>
+        <a href="#request-service" class="inline-block bg-white text-blue-600 hover:bg-blue-50 font-bold py-3 px-8 rounded-lg text-lg shadow-xl transition-all transform hover:scale-105">
+            Book Your Appointment Now →
+        </a>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="bg-gray-900 text-white py-12">
+    <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+            <div>
+                <img src="{% static 'core/images/logo.svg' %}" alt="ARA Home Services Logo" class="h-16 w-auto mb-4 filter brightness-0 invert">
+                <p class="text-gray-400">Expert appliance repair services in Houston, TX. Fast, reliable, and affordable.</p>
+            </div>
+            <div>
+                <h3 class="font-bold text-lg mb-4">Quick Links</h3>
+                <ul class="space-y-2 text-gray-400">
+                    <li><a href="#services" class="hover:text-white transition-colors">Our Services</a></li>
+                    <li><a href="#testimonials" class="hover:text-white transition-colors">Customer Reviews</a></li>
+                    <li><a href="#request-service" class="hover:text-white transition-colors">Request Service</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3 class="font-bold text-lg mb-4">Contact Info</h3>
+                <ul class="space-y-2 text-gray-400">
+                    <li>📞 Call us for immediate service</li>
+                    <li>📍 Serving Houston, TX and surrounding areas</li>
+                    <li>🕐 Same-day service available</li>
+                </ul>
+            </div>
+        </div>
+        <div class="border-t border-gray-800 pt-8 text-center">
+            <p class="mb-2 text-gray-400">&copy; 2024 ARA Home Services. All rights reserved.</p>
+            <p class="text-gray-500 text-sm">Operating under 4KARA LLC</p>
+        </div>
     </div>
 </footer>
 {% endblock %}

@@ -14,17 +14,31 @@
             <p class="text-lg text-gray-600 mb-8">
                 We'll contact you shortly to schedule your appointment. Our team typically responds within 1-2 hours during business hours.
             </p>
-            <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-8 text-left">
-                <p class="text-gray-700">
-                    <strong>What's next?</strong><br>
-                    • Check your phone for our call or text<br>
-                    • Have your appliance details ready<br>
-                    • We'll confirm your $49 service fee when we schedule
-                </p>
+            <div class="bg-blue-50 border-l-4 border-blue-500 p-6 mb-8 text-left rounded-lg">
+                <p class="text-gray-800 font-semibold mb-3 text-lg">What's next?</p>
+                <ul class="space-y-2 text-gray-700">
+                    <li class="flex items-start">
+                        <span class="text-blue-600 mr-2">✓</span>
+                        <span>Check your phone for our call or text</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-blue-600 mr-2">✓</span>
+                        <span>Have your appliance details ready</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-blue-600 mr-2">✓</span>
+                        <span>We'll confirm your $49 service fee when we schedule</span>
+                    </li>
+                </ul>
             </div>
-            <a href="{% url 'core:home' %}" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg text-lg transition-colors">
-                Return Home
-            </a>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="{% url 'core:home' %}" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg text-lg transition-all transform hover:scale-105 shadow-lg">
+                    Return to Home
+                </a>
+                <a href="{% url 'core:home' %}#request-service" class="inline-block bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-3 px-8 rounded-lg text-lg transition-all transform hover:scale-105">
+                    Request Another Service
+                </a>
+            </div>
         </div>
     </div>
 </section>

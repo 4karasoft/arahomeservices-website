@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,9 +6,53 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}ARA Home Services - Expert Appliance Repair in Houston{% endblock %}</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
 </head>
 <body class="bg-gray-50">
+    <!-- Navigation Header -->
+    <nav class="bg-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <a href="{% url 'core:home' %}" class="flex items-center space-x-3">
+                    <img src="{% static 'core/images/logo.svg' %}" alt="ARA Home Services Logo" class="h-16 w-auto">
+                </a>
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="{% url 'core:home' %}#services" class="text-gray-700 hover:text-blue-600 font-medium transition-colors">Services</a>
+                    <a href="{% url 'core:home' %}#testimonials" class="text-gray-700 hover:text-blue-600 font-medium transition-colors">Reviews</a>
+                    <a href="{% url 'core:home' %}#request-service" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg transition-colors">
+                        Get Started Now
+                    </a>
+                </div>
+                <div class="md:hidden">
+                    <a href="{% url 'core:home' %}#request-service" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg text-sm transition-colors">
+                        Get Started
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
     {% block content %}{% endblock %}
+
+    <!-- Live Chat Widget - Tawk.to -->
+    <script type="text/javascript">
+        var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+        (function(){
+        var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+        s1.async=true;
+        s1.src='https://embed.tawk.to/YOUR_PROPERTY_ID/YOUR_WIDGET_ID';
+        s1.charset='UTF-8';
+        s1.setAttribute('crossorigin','*');
+        s0.parentNode.insertBefore(s1,s0);
+        })();
+    </script>
+    <!-- Note: Replace YOUR_PROPERTY_ID and YOUR_WIDGET_ID with your actual Tawk.to credentials -->
+    <!-- Sign up at https://www.tawk.to/ for free live chat -->
 </body>
 </html>
 
