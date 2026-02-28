@@ -148,6 +148,8 @@ ADMIN_EMAIL = os.getenv('ADMIN_EMAIL', '')
 # Telegram Configuration
 TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN', '')
 TELEGRAM_CHAT_ID = os.getenv('TELEGRAM_CHAT_ID', '')
+# Inventory group only - bot will only parse messages from this group (e.g. -1001234567890)
+TELEGRAM_INVENTORY_GROUP_CHAT_ID = os.getenv('TELEGRAM_INVENTORY_GROUP_CHAT_ID', '')
 
 # CSRF Trusted Origins
 CSRF_TRUSTED_ORIGINS = [

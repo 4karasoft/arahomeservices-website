@@ -170,11 +170,29 @@ def telegram_webhook(request):
     if from_user.get('is_bot'):
         return JsonResponse({'ok': True})
 
+    # Only process group/supergroup messages (not direct messages or channels)
+    chat = message.get('chat', {})
+    chat_type = chat.get('type')
+    if chat_type not in ('group', 'supergroup'):
+        return JsonResponse({'ok': True})
+
+    # Only process messages from the configured inventory group
+    inventory_group_id = settings.TELEGRAM_INVENTORY_GROUP_CHAT_ID
+    if not inventory_group_id:
+        return JsonResponse({'ok': True})  # Must be configured to process any messages
+    try:
+        expected_id = int(str(inventory_group_id).strip())
+        if chat.get('id') != expected_id:
+            return JsonResponse({'ok': True})
+    except (ValueError, TypeError):
+        logger.warning("TELEGRAM_INVENTORY_GROUP_CHAT_ID is invalid")
+        return JsonResponse({'ok': True})
+
+    chat_id = chat.get('id')
     text = message.get('text') or message.get('caption') or ''
     if not text or len(text.strip()) < 5:
         return JsonResponse({'ok': True})
 
-    chat_id = message.get('chat', {}).get('id')
     message_id = message.get('message_id')
 
     # Avoid duplicate processing
