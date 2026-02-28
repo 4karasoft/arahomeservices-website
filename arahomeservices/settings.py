@@ -79,11 +79,13 @@ WSGI_APPLICATION = 'arahomeservices.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
+# Use DATABASE_PATH env to put SQLite on a persistent volume (e.g. /data/db.sqlite3)
+_db_path = os.getenv('DATABASE_PATH', str(BASE_DIR / 'db.sqlite3'))
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': _db_path,
     }
 }
 

@@ -28,6 +28,6 @@ RUN python manage.py collectstatic --noinput || true
 # Expose port
 EXPOSE 8000
 
-# Run gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "3", "arahomeservices.wsgi:application"]
+# Run migrate then gunicorn so the same container that serves traffic has the DB tables
+CMD ["sh", "-c", "python manage.py migrate --noinput && exec gunicorn --bind 0.0.0.0:8000 --workers 3 arahomeservices.wsgi:application"]
 
