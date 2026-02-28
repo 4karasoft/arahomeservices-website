@@ -1,9 +1,11 @@
 import json
+import re
 import logging
 
 import requests
 from django.conf import settings
 from django.core.mail import send_mail
+from django.db.models import Avg, Count, Max
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
@@ -14,6 +16,25 @@ from .models import InventoryItem
 from .telegram_parser import parse_inventory_message
 
 logger = logging.getLogger(__name__)
+
+
+def _size_sort_key(size_str):
+    """
+    Parse size string like "400x400" or "200x300" to a tuple for sorting (smallest first).
+    Unparseable sizes return (9999, 9999) so they sort last.
+    """
+    if not size_str or not str(size_str).strip():
+        return (9999, 9999)
+    s = str(size_str).strip().lower()
+    match = re.match(r"^(\d+)\s*[x×]\s*(\d+)$", s)
+    if match:
+        return (int(match.group(1)), int(match.group(2)))
+    # Single number?
+    match = re.match(r"^(\d+)$", s)
+    if match:
+        n = int(match.group(1))
+        return (n, n)
+    return (9999, 9999)
 
 
 def home(request):
@@ -245,13 +266,41 @@ def telegram_webhook(request):
 
 
 def inventory(request):
-    """Display inventory from group messages."""
+    """Display inventory grouped by model + size, with count and average price."""
     items = InventoryItem.objects.all()
     total_cost = sum(
-        (i.purchase_cost_usd or 0) for i in items
+        (float(i.purchase_cost_usd) if i.purchase_cost_usd is not None else 0) for i in items
     )
-    return render(request, 'core/inventory.html', {
-        'items': items,
-        'total_cost': total_cost,
+    groups_qs = (
+        InventoryItem.objects.values("model", "size")
+        .annotate(
+            count=Count("id"),
+            avg_price=Avg("purchase_cost_usd"),
+            mount_type=Max("mount_type"),
+        )
+        .order_by("size", "model")
+    )
+    groups = []
+    for row in groups_qs:
+        model = (row["model"] or "").strip() or "—"
+        size = (row["size"] or "").strip() or "—"
+        avg_price = row["avg_price"]
+        count = row["count"]
+        mount_type = (row["mount_type"] or "").strip() or "—"
+        sk = _size_sort_key(size)
+        groups.append({
+            "model": model,
+            "size": size,
+            "count": count,
+            "avg_price": float(avg_price) if avg_price is not None else None,
+            "mount_type": mount_type,
+            "size_sort_key": sk,
+            "size_a": sk[0],
+            "size_b": sk[1],
+        })
+    groups.sort(key=lambda g: g["size_sort_key"])
+    return render(request, "core/inventory.html", {
+        "groups": groups,
+        "total_cost": total_cost,
     })
 

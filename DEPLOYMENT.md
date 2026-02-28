@@ -65,12 +65,25 @@ So: **every time the container restarts or you deploy, the DB is effectively res
   1. **Persistent volume:** If your platform supports mounting a volume, set `DATABASE_PATH` to a path on that volume (e.g. `/data/db.sqlite3`) so the DB file is stored on the volume and survives restarts.
   2. **Managed database:** For production, use a managed PostgreSQL (or MySQL) and point Django at it via `DATABASE_URL`. Then run `migrate` once (e.g. in release command); all app instances share the same database and data persists.
 
-## Optional: put SQLite on a persistent volume
+## DigitalOcean: keep database across rebuilds and restarts
 
-Set in your app environment:
+To avoid losing inventory (and other data) on every deploy or container restart, put the SQLite file on a **persistent volume** and point the app at it.
 
-```bash
-DATABASE_PATH=/data/db.sqlite3
-```
+### Steps (App Platform)
 
-Then mount a volume at `/data` (or whatever path you use) so that directory persists across deploys/restarts.
+1. **Create a volume**  
+   In the DigitalOcean dashboard: **Apps → your app → Settings → App-Level Resources → Volumes → Create Volume**. Give it a name (e.g. `db-volume`) and a size (e.g. 1 GB).
+
+2. **Mount the volume**  
+   In the same app, open the **Component** that runs your container (e.g. the web service). Under **Volume Mounts**, add a mount:  
+   - **Volume:** the volume you created  
+   - **Mount Path:** `/data` (or another path you prefer)
+
+3. **Set the database path**  
+   In **App-Level** or **Component-Level** environment variables, add:  
+   - **Name:** `DATABASE_PATH`  
+   - **Value:** `/data/db.sqlite3` (must match the mount path + filename)
+
+4. **Redeploy** the app. On first run, the app will create `/data/db.sqlite3` on the volume; that file will persist across restarts and rebuilds.
+
+If `DATABASE_PATH` is not set, the app keeps using the default path inside the container (`BASE_DIR / 'db.sqlite3'`), and data is lost on each new container.

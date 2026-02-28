@@ -9,37 +9,45 @@
         <h1 class="text-3xl font-bold text-gray-800 mb-2">Inventory</h1>
         <p class="text-gray-600 mb-8">Stock tracked from Telegram group. Format: Type, Size, Model, Cost (USD)</p>
 
-        {% if items %}
+        {% if groups %}
         <div class="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-100">
             <span class="font-semibold text-gray-800">Total inventory value:</span>
             <span class="text-xl font-bold text-blue-700">${{ total_cost|floatformat:2 }}</span>
         </div>
 
+        <div class="mb-4 flex items-center gap-4">
+            <span class="text-sm text-gray-600">Sort by:</span>
+            <select id="inventory-sort" class="border border-gray-300 rounded px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                <option value="size-asc">Size (smallest first)</option>
+                <option value="size-desc">Size (largest first)</option>
+                <option value="model">Model</option>
+                <option value="count-desc">Count (highest first)</option>
+                <option value="count-asc">Count (lowest first)</option>
+                <option value="price-desc">Avg price (highest first)</option>
+                <option value="price-asc">Avg price (lowest first)</option>
+            </select>
+        </div>
+
         <div class="overflow-x-auto">
-            <table class="min-w-full bg-white border border-gray-200 rounded-lg shadow">
+            <table class="min-w-full bg-white border border-gray-200 rounded-lg shadow" id="inventory-table">
                 <thead class="bg-gray-50">
                     <tr>
-                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Date Added</th>
-                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Type of Mount</th>
                         <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Size</th>
                         <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Model</th>
-                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Cost (USD)</th>
-                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Added By</th>
+                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Type of Mount</th>
+                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Count</th>
+                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Avg price (USD)</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200">
-                    {% for item in items %}
-                    <tr class="hover:bg-gray-50">
-                        <td class="px-4 py-3 text-sm text-gray-600">{{ item.created_at|date:"M d, Y H:i" }}</td>
-                        <td class="px-4 py-3 text-sm font-medium text-gray-800">{{ item.mount_type|default:"—" }}</td>
-                        <td class="px-4 py-3 text-sm text-gray-700">{{ item.size|default:"—" }}</td>
-                        <td class="px-4 py-3 text-sm text-gray-700">{{ item.model|default:"—" }}</td>
+                    {% for g in groups %}
+                    <tr class="hover:bg-gray-50" data-size-a="{{ g.size_a }}" data-size-b="{{ g.size_b }}" data-model="{{ g.model|lower }}" data-count="{{ g.count }}" data-price="{{ g.avg_price|default:0 }}">
+                        <td class="px-4 py-3 text-sm text-gray-700">{{ g.size }}</td>
+                        <td class="px-4 py-3 text-sm font-medium text-gray-800">{{ g.model }}</td>
+                        <td class="px-4 py-3 text-sm text-gray-700">{{ g.mount_type }}</td>
+                        <td class="px-4 py-3 text-sm text-gray-700">{{ g.count }} piece{{ g.count|pluralize }}</td>
                         <td class="px-4 py-3 text-sm font-medium text-gray-800">
-                            {% if item.purchase_cost_usd is not None %}${{ item.purchase_cost_usd }}{% else %}—{% endif %}
-                        </td>
-                        <td class="px-4 py-3 text-sm text-gray-600">
-                            {{ item.sender_name|default:"—" }}
-                            {% if item.sender_username %}<span class="text-gray-400">@{{ item.sender_username }}</span>{% endif %}
+                            {% if g.avg_price is not None %}${{ g.avg_price|floatformat:2 }}{% else %}—{% endif %}
                         </td>
                     </tr>
                     {% endfor %}
@@ -58,4 +66,47 @@
         {% endif %}
     </div>
 </section>
+
+{% if groups %}
+<script>
+(function() {
+    var table = document.getElementById('inventory-table');
+    var tbody = table && table.querySelector('tbody');
+    var select = document.getElementById('inventory-sort');
+    if (!tbody || !select) return;
+
+    var rows = Array.from(tbody.querySelectorAll('tr'));
+
+    function getNum(el, attr) { return parseInt(el.getAttribute(attr), 10) || 0; }
+    function getFloat(el, attr) { return parseFloat(el.getAttribute(attr)) || 0; }
+
+    function sortTable() {
+        var value = select.value;
+        rows.sort(function(a, b) {
+            if (value === 'size-asc') {
+                var a1 = getNum(a, 'data-size-a'), a2 = getNum(a, 'data-size-b');
+                var b1 = getNum(b, 'data-size-a'), b2 = getNum(b, 'data-size-b');
+                return a1 !== b1 ? a1 - b1 : a2 - b2;
+            }
+            if (value === 'size-desc') {
+                var a1 = getNum(a, 'data-size-a'), a2 = getNum(a, 'data-size-b');
+                var b1 = getNum(b, 'data-size-a'), b2 = getNum(b, 'data-size-b');
+                return b1 !== a1 ? b1 - a1 : b2 - a2;
+            }
+            if (value === 'model') {
+                return (a.getAttribute('data-model') || '').localeCompare(b.getAttribute('data-model') || '');
+            }
+            if (value === 'count-desc') return getNum(b, 'data-count') - getNum(a, 'data-count');
+            if (value === 'count-asc') return getNum(a, 'data-count') - getNum(b, 'data-count');
+            if (value === 'price-desc') return getFloat(b, 'data-price') - getFloat(a, 'data-price');
+            if (value === 'price-asc') return getFloat(a, 'data-price') - getFloat(b, 'data-price');
+            return 0;
+        });
+        rows.forEach(function(r) { tbody.appendChild(r); });
+    }
+
+    select.addEventListener('change', sortTable);
+})();
+</script>
+{% endif %}
 {% endblock %}
