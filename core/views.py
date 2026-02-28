@@ -160,43 +160,54 @@ def telegram_webhook(request):
     except json.JSONDecodeError:
         return JsonResponse({'ok': False, 'error': 'Invalid JSON'}, status=400)
 
+    # Log that we received an update (helps debug: is Telegram calling the webhook?)
+    update_id = body.get('update_id', '?')
+    logger.info(f"[Telegram webhook] Received update_id={update_id}")
+
     # Telegram sends updates - can contain message, edited_message, etc.
     message = body.get('message') or body.get('edited_message')
     if not message:
+        logger.info("[Telegram webhook] Ignored: no message in update")
         return JsonResponse({'ok': True})
 
     # Skip messages from bots
     from_user = message.get('from', {})
     if from_user.get('is_bot'):
+        logger.info("[Telegram webhook] Ignored: message from bot")
         return JsonResponse({'ok': True})
 
     # Only process group/supergroup messages (not direct messages or channels)
     chat = message.get('chat', {})
     chat_type = chat.get('type')
+    chat_id = chat.get('id')
     if chat_type not in ('group', 'supergroup'):
+        logger.info(f"[Telegram webhook] Ignored: chat_type={chat_type!r} (need group/supergroup), chat_id={chat_id}")
         return JsonResponse({'ok': True})
 
     # Only process messages from the configured inventory group
     inventory_group_id = settings.TELEGRAM_INVENTORY_GROUP_CHAT_ID
     if not inventory_group_id:
-        return JsonResponse({'ok': True})  # Must be configured to process any messages
+        logger.info("[Telegram webhook] Ignored: TELEGRAM_INVENTORY_GROUP_CHAT_ID not set")
+        return JsonResponse({'ok': True})
     try:
         expected_id = int(str(inventory_group_id).strip())
-        if chat.get('id') != expected_id:
+        if chat_id != expected_id:
+            logger.info(f"[Telegram webhook] Ignored: chat_id {chat_id} != expected {expected_id}")
             return JsonResponse({'ok': True})
     except (ValueError, TypeError):
-        logger.warning("TELEGRAM_INVENTORY_GROUP_CHAT_ID is invalid")
+        logger.warning("[Telegram webhook] TELEGRAM_INVENTORY_GROUP_CHAT_ID is invalid")
         return JsonResponse({'ok': True})
 
-    chat_id = chat.get('id')
     text = message.get('text') or message.get('caption') or ''
     if not text or len(text.strip()) < 5:
+        logger.info(f"[Telegram webhook] Ignored: message too short (len={len(text.strip())})")
         return JsonResponse({'ok': True})
 
     message_id = message.get('message_id')
 
     # Avoid duplicate processing
     if InventoryItem.objects.filter(telegram_message_id=message_id).exists():
+        logger.info(f"[Telegram webhook] Ignored: duplicate message_id={message_id}")
         return JsonResponse({'ok': True})
 
     # Parse the message (format: mount_type, size, model, cost)
