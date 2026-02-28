@@ -185,17 +185,22 @@ def telegram_webhook(request):
         return JsonResponse({'ok': True})
 
     # Only process messages from the configured inventory group
-    inventory_group_id = settings.TELEGRAM_INVENTORY_GROUP_CHAT_ID
-    if not inventory_group_id:
+    raw_group_id = settings.TELEGRAM_INVENTORY_GROUP_CHAT_ID
+    if not raw_group_id:
         logger.info("[Telegram webhook] Ignored: TELEGRAM_INVENTORY_GROUP_CHAT_ID not set")
         return JsonResponse({'ok': True})
+    # Normalize: strip whitespace and remove surrounding quotes (common in env configs)
+    inventory_group_id = str(raw_group_id).strip().strip('"\'')
     try:
-        expected_id = int(str(inventory_group_id).strip())
+        expected_id = int(inventory_group_id)
         if chat_id != expected_id:
             logger.info(f"[Telegram webhook] Ignored: chat_id {chat_id} != expected {expected_id}")
             return JsonResponse({'ok': True})
     except (ValueError, TypeError):
-        logger.warning("[Telegram webhook] TELEGRAM_INVENTORY_GROUP_CHAT_ID is invalid")
+        logger.warning(
+            "[Telegram webhook] TELEGRAM_INVENTORY_GROUP_CHAT_ID is invalid (must be a number, e.g. -1001234567890). "
+            "Got: %s", repr(raw_group_id)[:50]
+        )
         return JsonResponse({'ok': True})
 
     text = message.get('text') or message.get('caption') or ''
