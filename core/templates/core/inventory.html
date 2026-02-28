@@ -1,0 +1,61 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Inventory - ARA Home Services{% endblock %}
+
+{% block content %}
+<section class="py-12 bg-white min-h-screen">
+    <div class="container mx-auto px-4">
+        <h1 class="text-3xl font-bold text-gray-800 mb-2">Inventory</h1>
+        <p class="text-gray-600 mb-8">Stock tracked from Telegram group. Format: Type, Size, Model, Cost (USD)</p>
+
+        {% if items %}
+        <div class="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-100">
+            <span class="font-semibold text-gray-800">Total inventory value:</span>
+            <span class="text-xl font-bold text-blue-700">${{ total_cost|floatformat:2 }}</span>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="min-w-full bg-white border border-gray-200 rounded-lg shadow">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Date Added</th>
+                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Type of Mount</th>
+                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Size</th>
+                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Model</th>
+                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Cost (USD)</th>
+                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Added By</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    {% for item in items %}
+                    <tr class="hover:bg-gray-50">
+                        <td class="px-4 py-3 text-sm text-gray-600">{{ item.created_at|date:"M d, Y H:i" }}</td>
+                        <td class="px-4 py-3 text-sm font-medium text-gray-800">{{ item.mount_type|default:"—" }}</td>
+                        <td class="px-4 py-3 text-sm text-gray-700">{{ item.size|default:"—" }}</td>
+                        <td class="px-4 py-3 text-sm text-gray-700">{{ item.model|default:"—" }}</td>
+                        <td class="px-4 py-3 text-sm font-medium text-gray-800">
+                            {% if item.purchase_cost_usd is not None %}${{ item.purchase_cost_usd }}{% else %}—{% endif %}
+                        </td>
+                        <td class="px-4 py-3 text-sm text-gray-600">
+                            {{ item.sender_name|default:"—" }}
+                            {% if item.sender_username %}<span class="text-gray-400">@{{ item.sender_username }}</span>{% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <p class="mt-4 text-sm text-gray-500">
+            <a href="{% url 'admin:core_inventoryitem_changelist' %}" class="text-blue-600 hover:underline">Manage in Admin</a>
+        </p>
+        {% else %}
+        <div class="bg-gray-50 border border-gray-200 rounded-lg p-12 text-center">
+            <p class="text-gray-600 text-lg">No inventory items yet.</p>
+            <p class="text-gray-500 mt-2">Send messages in your Telegram group in this format:</p>
+            <p class="mt-3 font-mono text-sm bg-white p-4 rounded border inline-block">Full motion, 400x400, xms999, 15</p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
